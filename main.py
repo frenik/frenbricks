@@ -6,7 +6,7 @@ import paddle
 import ball
 
 # Constants
-SCREEN_MODE = (640,480) # screen size (w,h)
+SCREEN_MODE = (1280,1024) # screen size (w,h)
 SCREEN_FLAGS = (pygame.FULLSCREEN)
 SCREEN_CAPTION = 'Bricks'
 
