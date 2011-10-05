@@ -80,7 +80,8 @@ def main():
             if p.isCollided(b.getBottom()):
                 b.ySpeed -= b.ySpeed*2
                 b.ySpeed -= 1 # speed up by 1
-                b.xSpeed = p.getNewXSpeed(b.getBottom())
+                newXSpeed = p.getNewXSpeed(b.getBottom()) 
+                if newXSpeed != 0: b.xSpeed = newXSpeed
             # check for collision with top wall
             if b.y <= 0:
                 # vertical speed should be negative, so we'll just abs() it.

@@ -16,6 +16,7 @@ class Brick:
         
     def draw(self):
         pygame.draw.rect(self.screen,self.color,(self.x,self.y,self.width,self.height))
+        pygame.draw.rect(self.screen,(0,0,0),(self.x,self.y,self.width,self.height),2)
         
 class BrickBlock:
     def __init__(self, rows, cols, (x,y), screen):
@@ -28,7 +29,7 @@ class BrickBlock:
         self.rows = rows
         self.columns = cols
         self.screen = screen
-        self.padding = 5
+        self.padding = 0
         
         # find top left x,y given amount of rows and columns, and brick dimensions
         self.x = x-self.columns*(self.brickWidth+self.padding)/2

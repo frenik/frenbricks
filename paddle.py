@@ -32,7 +32,7 @@ class Paddle:
             returns a new x speed for the object. The first and last
             10% of the bar return -5 and 5, respectively, the second and
             second-to-last return -3 and 3, and so on. The middle 20% returns
-            0, straight up.
+            0, no change.
         '''
         # comments assume self.x = 1
         if x in range(self.x, self.x+10): # 1-10
