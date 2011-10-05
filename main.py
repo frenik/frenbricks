@@ -4,6 +4,7 @@ from pygame.locals import *
 # my imports
 import paddle
 import ball
+import brickui
 
 # Constants
 SCREEN_MODE = (1280,1024) # screen size (w,h)
@@ -30,6 +31,7 @@ def main():
     p = paddle.Paddle(screen)
     gameState = GS_LAUNCH
     b = ball.Ball(screen,p.x+p.width/2,p.y)
+    scoreboard = brickui.BrickUI(screen)
     
     # FOR DEBUG TEXT
     debugFont = pygame.font.Font(None, 36)
@@ -60,6 +62,8 @@ def main():
             # draw walls
             pygame.draw.rect(screen, (255,255,255), 
                 (0,0,screen.get_size()[0],screen.get_size()[1]+10),10)
+            # draw UI
+            scoreboard.draw()
         elif gameState == GS_BOUNCE:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
@@ -94,6 +98,8 @@ def main():
             # draw walls
             pygame.draw.rect(screen, (255,255,255), 
                 (0,0,screen.get_size()[0],screen.get_size()[1]+10),10)
+            # draw UI
+            scoreboard.draw()
             # ANY DEBUG TEXT
             '''
             debugText = "BALL X, Y = %i, %i"%(b.x,b.y)
