@@ -49,3 +49,49 @@ class BrickBlock:
     def draw(self):
         for b in self.brickList:
             b.draw()
+            
+    def testCollisions(self,x,y,radius,xSpeed,ySpeed):
+        ''' Tests each block to see if there is a collision. If there is, returns
+            a new (xSpeed, ySpeed).
+            
+            Returns (0,0) for no collisions found.
+        '''
+        newXSpeed = 0
+        newYSpeed = 0
+        for b in self.brickList[:]:
+            inX = False
+            inY = False
+            # test for side collisions
+            if xSpeed > 0: # ball traveling right
+                if x+radius > b.x and x+radius < b.x+b.width:
+                    # ball within x boundaries
+                    inX = True
+                    newXSpeed = xSpeed - xSpeed*2
+            elif xSpeed < 0: # ball traveling left
+                if x-radius > b.x and x-radius < b.x+b.width:
+                    inX = True
+                    newXSpeed = abs(xSpeed)
+            else: # ball traveling along Y axis
+                if x > b.x and x < b.x+b.width:
+                    inX = True                
+            if ySpeed > 0: # ball traveling down
+                if y+radius > b.y and y+radius < b.y+b.height:
+                    inY = True
+                    newYSpeed = ySpeed - ySpeed*2
+            elif ySpeed < 0:
+                if y-radius > b.y and y-radius < b.y+b.height:
+                    inY = True
+                    newYSpeed = abs(ySpeed)
+            else: # ball traveling along X axis (shouldn't happen)
+                if y > b.y and y < b.y+b.height:
+                    inY = True
+            if inX and inY:
+                self.brickList.remove(b)
+                return (newXSpeed,newYSpeed)
+            else:
+                # false alarm, reset
+                newXSpeed = 0
+                newYSpeed = 0
+                
+        return (newXSpeed,newYSpeed)
+        

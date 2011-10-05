@@ -97,6 +97,13 @@ def main():
                 b = ball.Ball(screen,p.x+p.width/2,p.y)
                 # go back to launch
                 gameState = GS_LAUNCH
+            # check for ball colliding with any bricks
+            newVector = brickBlock.testCollisions(b.x,b.y,b.diameter/2,
+                b.xSpeed,b.ySpeed)
+            if newVector[0] != 0: # bounced left or right
+                b.xSpeed = newVector[0]
+            if newVector[1] != 0: # bounced up or down
+                b.ySpeed = newVector[1]
             # do all other drawing
             p.draw() # paddle
             b.draw() # ball
