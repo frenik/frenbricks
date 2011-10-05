@@ -5,6 +5,7 @@ from pygame.locals import *
 import paddle
 import ball
 import brickui
+import bricks
 
 # Constants
 SCREEN_MODE = (1280,1024) # screen size (w,h)
@@ -32,6 +33,8 @@ def main():
     gameState = GS_LAUNCH
     b = ball.Ball(screen,p.x+p.width/2,p.y)
     scoreboard = brickui.BrickUI(screen)
+    brickBlock = bricks.BrickBlock(5,10,
+        (screen.get_width()/2,screen.get_height()/2),screen)
     
     # FOR DEBUG TEXT
     debugFont = pygame.font.Font(None, 36)
@@ -62,6 +65,8 @@ def main():
             # draw walls
             pygame.draw.rect(screen, (255,255,255), 
                 (0,0,screen.get_size()[0],screen.get_size()[1]+10),10)
+            # draw bricks
+            brickBlock.draw()
             # draw UI
             scoreboard.draw()
         elif gameState == GS_BOUNCE:
@@ -98,6 +103,8 @@ def main():
             # draw walls
             pygame.draw.rect(screen, (255,255,255), 
                 (0,0,screen.get_size()[0],screen.get_size()[1]+10),10)
+            # draw bricks            
+            brickBlock.draw()
             # draw UI
             scoreboard.draw()
             # ANY DEBUG TEXT
