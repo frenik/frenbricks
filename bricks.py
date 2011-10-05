@@ -58,40 +58,42 @@ class BrickBlock:
         '''
         newXSpeed = 0
         newYSpeed = 0
+        # four points to test
+        top = (x,y-radius)
+        bottom = (x,y+radius)
+        left = (x-radius,y)
+        right = (x+radius,y)
         for b in self.brickList[:]:
-            inX = False
-            inY = False
-            # test for side collisions
-            if xSpeed > 0: # ball traveling right
-                if x+radius > b.x and x+radius < b.x+b.width:
-                    # ball within x boundaries
-                    inX = True
-                    newXSpeed = xSpeed - xSpeed*2
-            elif xSpeed < 0: # ball traveling left
-                if x-radius > b.x and x-radius < b.x+b.width:
-                    inX = True
-                    newXSpeed = abs(xSpeed)
-            else: # ball traveling along Y axis
-                if x > b.x and x < b.x+b.width:
-                    inX = True                
-            if ySpeed > 0: # ball traveling down
-                if y+radius > b.y and y+radius < b.y+b.height:
-                    inY = True
-                    newYSpeed = ySpeed - ySpeed*2
-            elif ySpeed < 0:
-                if y-radius > b.y and y-radius < b.y+b.height:
-                    inY = True
+            if top[1] <= b.y+b.height and top[1] >= b.y: 
+                # top y past bottom line of brick and before top line
+                if top[0] >= b.x and top[0] <= b.x+b.width:
+                    # top x between left & right sides
+                    # collision with bottom, bounce down
                     newYSpeed = abs(ySpeed)
-            else: # ball traveling along X axis (shouldn't happen)
-                if y > b.y and y < b.y+b.height:
-                    inY = True
-            if inX and inY:
-                self.brickList.remove(b)
-                return (newXSpeed,newYSpeed)
-            else:
-                # false alarm, reset
-                newXSpeed = 0
-                newYSpeed = 0
+                    self.brickList.remove(b)
+                    return (newXSpeed,newYSpeed)
+            if bottom[1] >= b.y and bottom[1] <= b.y+b.height: 
+                # bottom y past top line of brick and before bottom line
+                if bottom[0] >= b.x and bottom[0] <= b.x+b.width:
+                    # bottom x between left & right sides
+                    # collision with top
+                    newYSpeed = ySpeed - ySpeed*2
+                    self.brickList.remove(b)
+                    return (newXSpeed,newYSpeed)
+            if left[0] <= b.x+b.width and left[0] >= b.x: # left x past right line
+                if left[1] >= b.y and left[1] <= b.y+b.height:
+                    # y between top & bottom sides
+                    # collision with right side
+                    newXSpeed = abs(xSpeed)
+                    self.brickList.remove(b)
+                    return (newXSpeed,newYSpeed)
+            if right[0] <= b.x and right[0] >= b.x+b.width: # right x past left line
+                if right[1] >= b.y and right[1] <= b.y+b.height:
+                    # y between top & bottom
+                    # collision with left side
+                    newXSpeed = xSpeed - xSpeed*2
+                    self.brickList.remove(b)
+                    return (newXSpeed,newYSpeed)
                 
-        return (newXSpeed,newYSpeed)
+        return (0,0)
         
