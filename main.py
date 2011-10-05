@@ -37,8 +37,23 @@ def main():
                 done = True
         # blit background surface to wipe
         screen.blit(bg, (0,0))
-        # TODO: check for collisions
-        
+        # check for collision of bottom of ball/paddle
+        if p.isCollided(b.getBottom()):
+            b.ySpeed -= b.ySpeed*2
+        # check for collision with top wall
+        if b.y <= 0:
+            # vertical speed should be negative, so we'll just abs() it.
+            b.ySpeed = abs(b.ySpeed)
+        # check for ball hitting left wall
+        if b.x <= 0:
+            b.xSpeed = abs(b.xSpeed)
+        # check for ball hitting right wall
+        if b.x+b.diameter >= screen.get_size()[0]:
+            b.xSpeed -= b.xSpeed*2
+        # check for ball exiting screen through bottom
+        if b.y >= screen.get_size()[1]:
+            # create new ball for now
+            b = ball.Ball(screen)
         # do all other drawing
         p.draw()
         b.draw()
