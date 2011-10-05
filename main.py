@@ -11,8 +11,10 @@ import bricks
 SCREEN_MODE = (1280,1024) # screen size (w,h)
 SCREEN_FLAGS = (pygame.FULLSCREEN)
 SCREEN_CAPTION = 'Bricks'
+GS_TITLE = -1   # title screen
 GS_LAUNCH = 0   # waiting to launch ball
 GS_BOUNCE = 1   # ball bouncing
+GS_GAMEOVER = 2 # game over
 
 def main():   
     pygame.init()
@@ -30,7 +32,7 @@ def main():
     pygame.display.flip()
     clock = pygame.time.Clock()
     p = paddle.Paddle(screen)
-    gameState = GS_LAUNCH
+    gameState = GS_TITLE
     b = ball.Ball(screen,p.x+p.width/2,p.y)
     scoreboard = brickui.BrickUI(screen)
     brickBlock = bricks.BrickBlock(5,10,
@@ -76,6 +78,9 @@ def main():
                     if event.key == K_r: 
                         gameState = GS_LAUNCH
                         b = ball.Ball(screen, p.x+p.width/2,p.y)
+                    # end game, TEMPORARY
+                    if event.key == K_x:
+                        gameState = GS_GAMEOVER
             # check for collision of bottom of ball/paddle
             if p.isCollided(b.getBottom()):
                 b.ySpeed -= b.ySpeed*2
@@ -98,13 +103,19 @@ def main():
                 b = ball.Ball(screen,p.x+p.width/2,p.y)
                 # go back to launch
                 gameState = GS_LAUNCH
+                # deduct a life
+                scoreboard.lives -= 1
+                if scoreboard.lives == 0:
+                    gameState = GS_GAMEOVER
             # check for ball colliding with any bricks
             newVector = brickBlock.testCollisions(b.x,b.y,b.diameter/2,
                 b.xSpeed,b.ySpeed)
             if newVector[0] != 0: # bounced left or right
                 b.xSpeed = newVector[0]
+                scoreboard.score += 1
             if newVector[1] != 0: # bounced up or down
                 b.ySpeed = newVector[1]
+                scoreboard.score += 1
             # do all other drawing
             p.draw() # paddle
             b.draw() # ball
@@ -124,6 +135,38 @@ def main():
             text = debugFont.render(debugText,1,(255,255,255))
             screen.blit(text, (20,50,text.get_width(),text.get_height()))
             '''
+        elif gameState == GS_TITLE:
+            if pygame.mouse.get_pressed()[0]:
+                gameState = GS_LAUNCH
+            # draw title screen
+            titleFont = pygame.font.Font(None, 96)
+            titleText = titleFont.render("BRICKS.", 1, (178,34,34))
+            titlePos = titleText.get_rect(
+                center=(screen.get_width()/2,(screen.get_height()/2)))
+            screen.blit(titleText, titlePos)
+            subFont = pygame.font.Font(None, 24)
+            subText = subFont.render("A stupid little game by frenik.",1,(150,150,150))
+            subPos = subText.get_rect(center=(screen.get_width()/2,
+                screen.get_height()/2+40))
+            screen.blit(subText, subPos)
+        elif gameState == GS_GAMEOVER:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:                    
+                    if event.key == K_ESC: 
+                        done = True
+            if pygame.mouse.get_pressed()[0]:
+                gameState = GS_LAUNCH
+            gameOverFont = pygame.font.Font(None, 90)
+            gameOverText = gameOverFont.render("GAME OVER",1,(255,0,0))
+            gameOverPos = gameOverText.get_rect(center=(screen.get_width()/2,
+                screen.get_height()/2))
+            instructionsFont = pygame.font.Font(None, 24)
+            instructionsText = instructionsFont.render(
+                "Press ESC to quit or click to try again.",1,(255,255,255))
+            instructionsPos = instructionsText.get_rect(midtop=(screen.get_width()/2,
+                screen.get_height()/2+gameOverText.get_height()))
+            screen.blit(gameOverText,gameOverPos)
+            screen.blit(instructionsText, instructionsPos)
             
         # flip it
         pygame.display.flip()
